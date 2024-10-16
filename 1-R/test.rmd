@@ -1,0 +1,44 @@
+---
+title: "DEA合作博弈结果"
+output: 
+  bookdown::word_document2
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+htfm=function(ht) {
+ht <- set_all_borders(ht)
+position(ht)="center"
+align(ht)="center"
+valign(ht)="middle"
+font_size(ht) =9
+ht
+}
+
+hadley=c("tidyverse","readxl", "writexl")  
+morel=c("tidyverse",  "flextable", "huxtable", "janitor", "rstatix")
+zhang=c("tidyverse", "readxl", "writexl", "Matrix", "abind", "Rglpk", "CoopGame")
+pkgs=unique(c(hadley, morel,zhang))
+lapply(pkgs, library, character.only = TRUE)   #不能使用purrr。因为tidyverse还没有启动
+
+m10=data.frame(x=1:4, y=5:8, z=9:12)
+
+ht= as_hux(m10)
+
+ht0=htfm(ht)
+
+width(ht0)  = 1.2
+
+```
+
+
+
+```{r fht, tab.cap="Numerical results based on model (P)", echo=FALSE}
+
+ht0 %>% as_flextable() 
+```
+
+
+

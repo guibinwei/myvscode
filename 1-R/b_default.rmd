@@ -1,0 +1,80 @@
+---
+title: "债券违约"
+output: 
+  bookdown::word_document2:
+    reference_docx: My_Word_templates.docx
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#options(digits = 2)
+
+
+hadley=c("tidyverse","readxl", "writexl")  
+morel=c("flextable", "huxtable", "ggthemes")
+pkgs=c(hadley, morel)
+lapply(pkgs, library, character.only = TRUE)   #不能使用purrr。因为tidyverse还没有启动
+
+htfm=function(hut) {
+#ht-休格表格-fm-form-形式
+ht <- set_all_borders(hut) 
+position(ht)="center"  #表格位置
+align(ht)="center"  #单元格水平
+valign(ht)="middle"  #单元格垂直
+#row_height(ht)=0.1
+top_padding(ht) <- 0
+bottom_padding(ht) <-0
+left_padding(ht) <- 0.5
+right_padding(ht) <- 0.5
+font_size(ht) =9  #字体
+ht
+}
+load("ddt11h.RData")
+load("ddt11h4b.RData")  # A tibble: 6 × 7
+#source("bond_default.r")   #之前的运行步骤 生成 相应的dataframe
+#生成的.docx文档在myR中
+
+
+#ddt11h2=ddt11h %>% mutate( across( everything(),  .fns = ~coalesce(.,0)  )    )
+ht= as_hux(ddt11h)
+
+ht=ht %>% mutate( across( everything(),  .fns = ~coalesce(.,"-")  )    )
+
+header=c("", rep("国内债",3), rep("海外债",3) )
+ht=insert_row(ht, header)
+
+g=3  #合并3个表格为一个
+a=2+(0:1)*g
+for (i in 1:2)  colspan(ht)[1, a[i]] =g
+
+head2=c("年份","违约企业（家）","违约债券（只）","违约金额（亿人民币）","违约企业（家）","违约债券（只）","违约金额（亿美元）")
+ht[2,]=head2
+
+
+#ht0=ht
+
+width(ht)  = 1
+
+ht0=htfm(ht)
+
+number_format(ht0)[-(1:2), ] = fmt_pretty(big.mark = "")
+
+footer="数据来源：Wind，项目组整理计算。"
+
+#ft=ht0 %>% as_flextable()
+
+```
+
+```{r tht, tab.cap="债券违约统计", tab.align = 'center', echo=FALSE}
+#fht-表示figure+ht。此处应该是 table+ht
+ht0 
+#ht0 %>% add_footnote(footer) %>% set_font_size(9)
+
+```
+
+
+`r footer`
+
+
+
