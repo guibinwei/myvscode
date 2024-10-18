@@ -5,11 +5,11 @@ git add .
 
 # Get current date, day, and time
 current_date=$(date +"%Y-%m-%d")
-current_day=$(date +"%A")
+current_day=$(LC_TIME=en_US.UTF-8 date +"%A")
 current_time=$(date +"%H:%M")
 
 # Create commit message
-commit_message="Commit on $current_date $current_day at $current_time"
+commit_message="Commit on $current_date - $current_day at $current_time"
 
 # Commit changes
 git commit -m "$commit_message"
